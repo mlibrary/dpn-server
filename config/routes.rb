@@ -15,7 +15,12 @@ Rails.application.routes.draw do
   authenticate :user do
     mount Resque::Server, at: '/jobs'
     mount DpnSwaggerEngine::Engine, at: '/api-docs'
+
+    namespace :glance do
+      resources :replication_transfers
+    end
   end
+
 
   scope "/api-v#{VERSION}" do
     resources :nodes, only: [:index, :show, :create, :update, :destroy], path: :node, param: :namespace
