@@ -47,6 +47,10 @@ class ReplicationTransfersGrid
     end
   end
 
+  column(:bm_id, header: "bm_id") do |asset|
+    asset.bag_man_request&.id
+  end
+
   column(:bm_status, header: "bm_status") do |asset|
     bag_man_request_status(asset.bag_man_request)
   end
