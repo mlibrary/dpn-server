@@ -16,6 +16,7 @@ class ReplicationTransfersGrid
     ReplicationTransfer
       .includes(:bag_man_request)
       .includes(:bag)
+      .where(to_node: Node.local_node!)
       .order(:id)
   end
 
