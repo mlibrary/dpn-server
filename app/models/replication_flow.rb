@@ -34,6 +34,14 @@ class ReplicationFlow < ActiveRecord::Base
     !retrieval_attempts.ongoing.empty?
   end
 
+  def unpacked?
+    !unpack_attempts.successful.empty?
+  end
+
+  def unpack_ongoing?
+    !unpack_attempts.ongoing.empty?
+  end
+
   def source_location
     link
   end
@@ -41,5 +49,21 @@ class ReplicationFlow < ActiveRecord::Base
   def staging_location
     File.join(Rails.configuration.staging_dir.to_s, from_node, bag)
   end
+
+  def unpacked_location
+    unpack_attempts.successful.first.unpacked_location
+  end
+
+
+  scope :retrieved, -> { joins(:retrieval_attempts).where(retrieval_attempts: {success: true}) }
+  scope :retrieval_ongoing, -> {
+    joins(:retrieval_attempts).where(retrieval_attempts: {end_time: nil} )
+  }
+  scope :unpacked, -> { joins(:unpack_attempts).where(unpack_attempts: {success: true}) }
+  scope :unpack_ongoing, -> {
+    joins(:unpack_attempts).where(unpack_attempts: {end_time: nil} )
+  }
+
+
 
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170126185751) do
+ActiveRecord::Schema.define(version: 20170126222347) do
 
   create_table "bag_man_requests", force: :cascade do |t|
     t.string   "source_location",                         null: false
@@ -250,6 +250,15 @@ ActiveRecord::Schema.define(version: 20170126185751) do
   end
 
   add_index "supported_protocols", ["node_id", "protocol_id"], name: "index_supported_protocols_on_node_id_and_protocol_id", unique: true
+
+  create_table "unpack_attempts", force: :cascade do |t|
+    t.integer  "replication_flow_id", null: false
+    t.datetime "start_time",          null: false
+    t.datetime "end_time"
+    t.boolean  "success"
+    t.string   "unpacked_location"
+    t.text     "error"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",               default: "",    null: false
