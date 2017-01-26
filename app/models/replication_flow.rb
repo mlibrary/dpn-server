@@ -6,6 +6,7 @@
 class ReplicationFlow < ActiveRecord::Base
 
   has_many :retrieval_attempts, dependent: :destroy
+  has_many :unpack_attempts, dependent: :destroy
 
   validates :replication_id,  presence: true, uniqueness: true
   validates :link,            presence: true
@@ -31,6 +32,14 @@ class ReplicationFlow < ActiveRecord::Base
 
   def retrieval_ongoing?
     !retrieval_attempts.ongoing.empty?
+  end
+
+  def source_location
+    link
+  end
+
+  def staging_location
+    File.join(Rails.configuration.staging_dir.to_s, from_node, bag)
   end
 
 end

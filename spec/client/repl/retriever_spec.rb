@@ -7,22 +7,6 @@
 require 'rails_helper'
 
 describe Client::Repl::Retriever do
-  describe "#source_location" do
-    let(:link) { "some@link" }
-    let(:retrieval_attempt) { double(:attempt, link: link) }
-    it "returns the flow's link" do
-      expect(described_class.new(retrieval_attempt).source_location).to eql(link)
-    end
-  end
-
-  describe "#staging_location" do
-    let(:retrieval_attempt) { double(:attempt, from_node: "zip", bag: "someuuid") }
-    let(:dest) { File.join(Rails.configuration.staging_dir.to_s, "zip", "someuuid") }
-    it "matches /staging_dir/from_node_namespace/bag_uuid" do
-      expect(described_class.new(retrieval_attempt).staging_location).to eql(dest)
-    end
-  end
-
   describe "#rsync" do
     let(:source) { "source" }
     let(:dest) { "dest" }

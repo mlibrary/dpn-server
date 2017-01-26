@@ -27,27 +27,13 @@ module Client
       end
       
       def retrieve
-        result = rsync(source_location, staging_location)
+        result = rsync(retrieval_attempt.source_location, retrieval_attempt.staging_location)
         if result.success?
           retrieval_attempt.success!
         else
           retrieval_attempt.failure!(result.error)
         end
       end
-
-      def source_location
-        retrieval_attempt.link
-      end
-
-      # /dpnrepo/production/download_temp/from_node/bag
-      def staging_location
-        File.join(
-          Rails.configuration.staging_dir.to_s,
-          retrieval_attempt.from_node,
-          retrieval_attempt.bag
-        )
-      end
-
 
       # returns a Result
       def rsync(source, destination)

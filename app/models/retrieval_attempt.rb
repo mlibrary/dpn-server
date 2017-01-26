@@ -12,10 +12,8 @@ class RetrievalAttempt < ActiveRecord::Base
   scope :successful, -> { where(success: true) }
 
   def_delegators :replication_flow,
-    :replication_id,
-    :link,
-    :from_node,
-    :bag
+    :source_location,
+    :staging_location
 
   def success!
     update!(end_time: Time.now.utc, success: true)

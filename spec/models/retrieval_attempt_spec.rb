@@ -9,7 +9,7 @@ require 'rails_helper'
 describe RetrievalAttempt do
   describe "delegations" do
     let(:attempt) { Fabricate.build(:retrieval_attempt, replication_flow: Fabricate.build(:replication_flow)) }
-    [:replication_id, :link, :from_node, :bag].each do |method|
+    [:source_location, :staging_location].each do |method|
       it "##{method}" do
         expect(attempt.public_send(method)).to eql(attempt.replication_flow.public_send(method))
       end

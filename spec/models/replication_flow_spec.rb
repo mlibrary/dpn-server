@@ -34,4 +34,23 @@ describe ReplicationFlow do
     end
   end
 
+
+  describe "#source_location" do
+    let(:link) { "some@link" }
+    let(:flow) { Fabricate.build(:replication_flow, link: link) }
+    it "returns the flow's link" do
+      expect(flow.source_location).to eql(link)
+    end
+  end
+
+  describe "#staging_location" do
+    let(:bag) { SecureRandom.uuid }
+    let(:from_node) { "zip" }
+    let(:dest) { File.join(Rails.configuration.staging_dir.to_s, from_node, bag) }
+    let(:flow) { Fabricate.build(:replication_flow, from_node: from_node, bag: bag) }
+    it "matches /staging_dir/from_node_namespace/bag_uuid" do
+      expect(flow.staging_location).to eql(dest)
+    end
+  end
+
 end
