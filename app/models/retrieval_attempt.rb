@@ -17,4 +17,12 @@ class RetrievalAttempt < ActiveRecord::Base
     :from_node,
     :bag
 
+  def success!
+    update!(end_time: Time.now.utc, success: true)
+  end
+
+  def failure!(error)
+    update!(end_time: Time.now.utc, success: false, error: error)
+  end
+
 end

@@ -38,4 +38,33 @@ describe RetrievalAttempt do
     end
   end
 
+  describe "#success!" do
+    let(:attempt) { Fabricate.build(:retrieval_attempt, success: nil, end_time: nil) }
+    it "sets the end_time" do
+      expect {attempt.success!}.to change{attempt.end_time}
+        .from(nil).to(be_within(1.second).of(Time.now))
+    end
+    it "sets success => true" do
+      expect {attempt.success!}.to change{attempt.success}
+        .from(nil).to(true)
+    end
+  end
+
+  describe "#failure!" do
+    let(:attempt) { Fabricate.build(:retrieval_attempt, success: nil, end_time: nil) }
+    let(:msg) { Faker::Lorem.paragraph }
+    it "sets the end_time" do
+      expect {attempt.failure!(msg)}.to change{attempt.end_time}
+        .from(nil).to(be_within(1.second).of(Time.now))
+    end
+    it "sets success => false" do
+      expect {attempt.failure!(msg)}.to change{attempt.success}
+        .from(nil).to(false)
+    end
+    it "sets error to the given message" do
+      expect {attempt.failure!(msg)}.to change{attempt.error}
+        .from(nil).to(msg)
+    end
+  end
+
 end
