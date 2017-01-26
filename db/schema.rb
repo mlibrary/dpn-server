@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160927230136) do
+ActiveRecord::Schema.define(version: 20170126185751) do
 
   create_table "bag_man_requests", force: :cascade do |t|
     t.string   "source_location",                         null: false
@@ -151,6 +151,15 @@ ActiveRecord::Schema.define(version: 20160927230136) do
     t.datetime "updated_at",   null: false
   end
 
+  create_table "replication_flows", force: :cascade do |t|
+    t.string "replication_id", null: false
+    t.string "link",           null: false
+    t.string "from_node",      null: false
+    t.string "bag",            null: false
+  end
+
+  add_index "replication_flows", ["replication_id"], name: "index_replication_flows_on_replication_id", unique: true
+
   create_table "replication_transfers", force: :cascade do |t|
     t.integer  "bag_id",                                           null: false
     t.integer  "from_node_id",                                     null: false
@@ -196,6 +205,14 @@ ActiveRecord::Schema.define(version: 20160927230136) do
   end
 
   add_index "restore_transfers", ["restore_id"], name: "index_restore_transfers_on_restore_id", unique: true
+
+  create_table "retrieval_attempts", force: :cascade do |t|
+    t.integer  "replication_flow_id", null: false
+    t.datetime "start_time",          null: false
+    t.datetime "end_time"
+    t.boolean  "success"
+    t.text     "error"
+  end
 
   create_table "run_times", force: :cascade do |t|
     t.string   "name",                                         null: false
