@@ -26,10 +26,6 @@ describe Client::Repl::Retriever do
     end
   end
 
-  describe "#successful_attempt" do
-
-  end
-
 end
 
 
