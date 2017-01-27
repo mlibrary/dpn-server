@@ -8,6 +8,7 @@ class ReplicationFlow < ActiveRecord::Base
   has_many :retrieval_attempts, dependent: :destroy
   has_many :unpack_attempts, dependent: :destroy
   has_many :validate_attempts, dependent: :destroy
+  has_many :fixity_attempts, dependent: :destroy
 
   validates :replication_id,  presence: true, uniqueness: true
   validates :link,            presence: true
@@ -51,6 +52,14 @@ class ReplicationFlow < ActiveRecord::Base
     !validate_attempts.ongoing.empty?
   end
 
+  def fixity_complete?
+    !fixity_attempts.successful.empty?
+  end
+
+  def fixity_ongoing?
+    !fixity_attempts.ongoing.empty?
+  end
+
   def source_location
     link
   end
@@ -71,6 +80,10 @@ class ReplicationFlow < ActiveRecord::Base
     validate_attempts.successful.first.error
   end
 
+  def fixity_value
+    fixity_attempts.successful.first.value
+  end
+
 
   scope :retrieved, -> { joins(:retrieval_attempts).where(retrieval_attempts: {success: true}) }
   scope :retrieval_ongoing, -> {
@@ -85,6 +98,11 @@ class ReplicationFlow < ActiveRecord::Base
   scope :validated, -> { joins(:validate_attempts).where(validate_attempts: {success: true}) }
   scope :validate_ongoing, -> {
     joins(:validate_attempts).where(validate_attempts: {end_time: nil} )
+  }
+
+  scope :fixity_complete, -> { joins(:fixity_attempts).where(fixity_attempts: {success: true}) }
+  scope :fixity_ongoing, -> {
+    joins(:fixity_attempts).where(fixity_attempts: {end_time: nil} )
   }
 
 
