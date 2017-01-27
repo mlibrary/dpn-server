@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170126222347) do
+ActiveRecord::Schema.define(version: 20170127172353) do
 
   create_table "bag_man_requests", force: :cascade do |t|
     t.string   "source_location",                         null: false
@@ -275,6 +275,15 @@ ActiveRecord::Schema.define(version: 20170126222347) do
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
+
+  create_table "validate_attempts", force: :cascade do |t|
+    t.integer  "replication_flow_id", null: false
+    t.datetime "start_time",          null: false
+    t.datetime "end_time"
+    t.boolean  "success"
+    t.boolean  "valid"
+    t.text     "error"
+  end
 
   create_table "version_families", force: :cascade do |t|
     t.string "uuid", null: false

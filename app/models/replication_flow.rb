@@ -7,6 +7,7 @@ class ReplicationFlow < ActiveRecord::Base
 
   has_many :retrieval_attempts, dependent: :destroy
   has_many :unpack_attempts, dependent: :destroy
+  has_many :validate_attempts, dependent: :destroy
 
   validates :replication_id,  presence: true, uniqueness: true
   validates :link,            presence: true
@@ -42,6 +43,14 @@ class ReplicationFlow < ActiveRecord::Base
     !unpack_attempts.ongoing.empty?
   end
 
+  def validated?
+    !validate_attempts.successful.empty?
+  end
+
+  def validate_ongoing?
+    !validate_attempts.ongoing.empty?
+  end
+
   def source_location
     link
   end
@@ -54,14 +63,28 @@ class ReplicationFlow < ActiveRecord::Base
     unpack_attempts.successful.first.unpacked_location
   end
 
+  def valid?
+    validate_attempts.successful.first.valid?
+  end
+
+  def validation_errors
+    validate_attempts.successful.first.error
+  end
+
 
   scope :retrieved, -> { joins(:retrieval_attempts).where(retrieval_attempts: {success: true}) }
   scope :retrieval_ongoing, -> {
     joins(:retrieval_attempts).where(retrieval_attempts: {end_time: nil} )
   }
+
   scope :unpacked, -> { joins(:unpack_attempts).where(unpack_attempts: {success: true}) }
   scope :unpack_ongoing, -> {
     joins(:unpack_attempts).where(unpack_attempts: {end_time: nil} )
+  }
+
+  scope :validated, -> { joins(:validate_attempts).where(validate_attempts: {success: true}) }
+  scope :validate_ongoing, -> {
+    joins(:validate_attempts).where(validate_attempts: {end_time: nil} )
   }
 
 
