@@ -30,6 +30,7 @@ module Client
       ReplicationTransfer
         .where(to_node: Node.local_node!)
         .where(cancelled: false)
+        .where(stored: false)
         .includes(:from_node, :bag)
     end
 
