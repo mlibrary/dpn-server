@@ -37,9 +37,13 @@ module Client
 
       # returns a Result
       def rsync(source, destination)
-        FileUtils.mkdir_p(destination) unless File.exist? destination
-        Rsync.run(source, destination, RSYNC_OPTIONS) do |result|
-          result
+        begin
+          FileUtils.mkdir_p(destination) unless File.exist? destination
+          Rsync.run(source, destination, RSYNC_OPTIONS) do |result|
+            result
+          end
+        rescue IOError, SystemCallError => e
+          Struct.new(success?: false, error: "#{e.message}\n#{e.backtrace}")
         end
       end
 
