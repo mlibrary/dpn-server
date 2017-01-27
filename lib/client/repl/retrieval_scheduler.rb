@@ -42,8 +42,6 @@ module Client
       ReplicationTransfer
         .where(to_node: Node.local_node!)
         .where(cancelled: false)
-        .where(store_requested: false)
-        .where(fixity_value: nil)
         .includes(:from_node, :bag)
     end
 
