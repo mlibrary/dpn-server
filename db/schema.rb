@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170127180033) do
+ActiveRecord::Schema.define(version: 20170127202934) do
 
   create_table "bag_man_requests", force: :cascade do |t|
     t.string   "source_location",                         null: false
@@ -145,6 +145,14 @@ ActiveRecord::Schema.define(version: 20170127180033) do
   end
 
   add_index "protocols", ["name"], name: "index_protocols_on_name", unique: true
+
+  create_table "received_notify_attempts", force: :cascade do |t|
+    t.integer  "replication_flow_id", null: false
+    t.datetime "start_time",          null: false
+    t.datetime "end_time"
+    t.boolean  "success"
+    t.text     "error"
+  end
 
   create_table "replicating_nodes", force: :cascade do |t|
     t.integer "node_id", null: false

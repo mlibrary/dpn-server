@@ -9,6 +9,7 @@ class ReplicationFlow < ActiveRecord::Base
   has_many :unpack_attempts, dependent: :destroy
   has_many :validate_attempts, dependent: :destroy
   has_many :fixity_attempts, dependent: :destroy
+  has_many :received_notify_attempts, dependent: :destroy
 
   validates :replication_id,  presence: true, uniqueness: true
   validates :link,            presence: true
@@ -60,6 +61,14 @@ class ReplicationFlow < ActiveRecord::Base
     !fixity_attempts.ongoing.empty?
   end
 
+  def receive_notified?
+    !receive_notify_attempts.successful.empty?
+  end
+
+  def receive_notify_ongoing?
+    !receive_notify_attempts.ongoing.empty?
+  end
+
   def source_location
     link
   end
@@ -104,6 +113,15 @@ class ReplicationFlow < ActiveRecord::Base
   scope :fixity_ongoing, -> {
     joins(:fixity_attempts).where(fixity_attempts: {end_time: nil} )
   }
+
+  scope :receive_notified, -> {
+    joins(:received_notify_attempts).where(received_notify_attempts: {success: true})
+  }
+  scope :receive_notify_ongoing, -> {
+    joins(:received_notify_attempts).where(received_notify_attempts: {end_time: nil} )
+  }
+
+
 
 
 
