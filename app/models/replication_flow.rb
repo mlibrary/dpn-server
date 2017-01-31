@@ -63,12 +63,12 @@ class ReplicationFlow < ActiveRecord::Base
     !fixity_attempts.ongoing.empty?
   end
 
-  def receive_notified?
-    !receive_notify_attempts.successful.empty?
+  def received_notified?
+    !received_notify_attempts.successful.empty?
   end
 
-  def receive_notify_ongoing?
-    !receive_notify_attempts.ongoing.empty?
+  def received_notify_ongoing?
+    !received_notify_attempts.ongoing.empty?
   end
 
   def stored?
@@ -106,7 +106,7 @@ class ReplicationFlow < ActiveRecord::Base
   end
 
   def validation_errors
-    validate_attempts.successful.first.error
+    validate_attempts.successful.first&.validation_errors || []
   end
 
   def fixity_value

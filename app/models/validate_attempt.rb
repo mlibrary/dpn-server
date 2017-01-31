@@ -37,7 +37,7 @@ class ValidateAttempt < ActiveRecord::Base
 
   def validation_errors
     if success?
-      read_attribute(:error).split("\n")
+      read_attribute(:error)&.split("\n") || []
     else
       []
     end
