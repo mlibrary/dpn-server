@@ -9,29 +9,20 @@ module Client
   class ReceivedNotifyScheduler
 
     def schedule
-      replications.each do |replication|
-        flow = ReplicationFlow.find_by_replication_id!(replication.replication_id)
-        if should_notify?(flow)
-          received_notify_attempt = flow.received_notify_attempts.create!(start_time: Time.now.utc)
-          ReceivedNotifyJob.perform_later(replication, received_notify_attempt)
-        end
+      flow.each do |flow|
+        attempt = flow.received_notified_attempts.create!(start_time: Time.now.utc)
+        ReceivedNotifyJob.perform_later(attempt)
       end
     end
 
-
-    def should_notify?(flow)
-      flow.fixity_complete? && flow.validated?
-    end
-
-
-    def replications
-      # We define the query here instead of on the model to facilitate
-      # moving this functionality to a standalone project.
-      ReplicationTransfer
-        .where(to_node: Node.local_node!)
-        .where(cancelled: false)
-        .where(stored: false)
-        .includes(:from_node, :bag)
+    def flows
+      ReplicationFlow
+        .retrieved
+        .unpacked
+        .validated
+        .fixity_complete
+        .not.received_notified
+        .not.received_notify_ongoing
     end
 
   end

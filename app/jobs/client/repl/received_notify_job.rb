@@ -9,8 +9,8 @@ module Client
     class ReceivedNotifyJob < ActiveJob::Base
       queue_as :repl
 
-      def perform(attempt, replication)
-        RecievedNotifer.new(attempt, replication).notify
+      def perform(attempt)
+        ReceivedNotifier.new(attempt).notify
       end
 
     end

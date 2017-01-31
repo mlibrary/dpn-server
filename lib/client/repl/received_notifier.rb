@@ -9,22 +9,25 @@ module Client
     class ReceivedNotifier
       include Common
 
-      attr_reader :attempt, :replication
+      attr_reader :attempt
 
-      def initialize(attempt, replication)
+      def initialize(attempt)
         @attempt = attempt
-        @replication = replication
+      end
+
+      def replication
+        ReplicationTransfer.find_by_replication_id(attempt.replication_id)
       end
 
       def notify
         if attempt.valid?
-          send_notification(update_query)
+          send_notification(update_query(replication))
         else
-          send_notification(cancel_query)
+          send_notification(cancel_query(replication))
         end
       end
 
-      def cancel_query
+      def cancel_query(replication)
         replication.cancelled = true
         replication.fixity_value = attempt.fixity_value
         replication.cancel_reason = 'bag_invalid'
@@ -32,7 +35,7 @@ module Client
         Query.new(:update_replication, ReplicationTransferAdapter.from_model(replication).to_public_hash)
       end
 
-      def update_query
+      def update_query(replication)
         replication.fixity_value = attempt.fixity_value
         Query.new(:update_replication, ReplicationTransferAdapter.from_model(replication).to_public_hash)
       end
