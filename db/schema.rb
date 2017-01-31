@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170127222217) do
+ActiveRecord::Schema.define(version: 20170127222333) do
 
   create_table "bag_man_requests", force: :cascade do |t|
     t.string   "source_location",                         null: false
@@ -255,6 +255,14 @@ ActiveRecord::Schema.define(version: 20170127222217) do
   add_index "storage_types", ["name"], name: "index_storage_types_on_name", unique: true
 
   create_table "store_attempts", force: :cascade do |t|
+    t.integer  "replication_flow_id", null: false
+    t.datetime "start_time",          null: false
+    t.datetime "end_time"
+    t.boolean  "success"
+    t.text     "error"
+  end
+
+  create_table "stored_notify_attempts", force: :cascade do |t|
     t.integer  "replication_flow_id", null: false
     t.datetime "start_time",          null: false
     t.datetime "end_time"

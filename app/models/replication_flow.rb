@@ -11,6 +11,7 @@ class ReplicationFlow < ActiveRecord::Base
   has_many :fixity_attempts, dependent: :destroy
   has_many :received_notify_attempts, dependent: :destroy
   has_many :store_attempts, dependent: :destroy
+  has_many :stored_notify_attempts, dependent: :destroy
 
   validates :replication_id,  presence: true, uniqueness: true
   validates :link,            presence: true
@@ -78,6 +79,16 @@ class ReplicationFlow < ActiveRecord::Base
     !store_attempts.ongoing.empty?
   end
 
+  def stored_notified?
+    !stored_notify_attempts.successful.empty?
+  end
+
+  def stored_notify_ongoing?
+    !stored_notify_attempts.ongoing.empty?
+  end
+
+
+
   def source_location
     link
   end
@@ -123,10 +134,10 @@ class ReplicationFlow < ActiveRecord::Base
     joins(:fixity_attempts).where(fixity_attempts: {end_time: nil} )
   }
 
-  scope :receive_notified, -> {
+  scope :received_notified, -> {
     joins(:received_notify_attempts).where(received_notify_attempts: {success: true})
   }
-  scope :receive_notify_ongoing, -> {
+  scope :received_notify_ongoing, -> {
     joins(:received_notify_attempts).where(received_notify_attempts: {end_time: nil} )
   }
 
@@ -135,8 +146,11 @@ class ReplicationFlow < ActiveRecord::Base
     joins(:store_attempts).where(store_attempts: {end_time: nil} )
   }
 
-
-
-
+  scope :stored_notified, -> {
+    joins(:stored_notify_attempts).where(stored_notify_attempts: {success: true})
+  }
+  scope :stored_notify_ongoing, -> {
+    joins(:stored_notify_attempts).where(stored_notify_attempts: {end_time: nil} )
+  }
 
 end
