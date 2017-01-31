@@ -101,8 +101,8 @@ class ReplicationFlow < ActiveRecord::Base
     unpack_attempts.successful.first.unpacked_location
   end
 
-  def valid?
-    validate_attempts.successful.first.valid?
+  def bag_valid?
+    validate_attempts.successful.first.bag_valid?
   end
 
   def validation_errors

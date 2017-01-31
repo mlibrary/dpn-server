@@ -5,7 +5,7 @@ class CreateValidateAttempts < ActiveRecord::Migration
       t.datetime :start_time,         null: false
       t.datetime :end_time,           null: true
       t.boolean :success,             null: true, default: nil
-      t.boolean :valid,               null: true, default: nil
+      t.boolean :bag_valid,           null: true, default: nil
       t.text :error,                  null: true
     end
     add_foreign_key :unpack_attempts, :replication_flows

@@ -18,7 +18,7 @@ class ValidateAttempt < ActiveRecord::Base
     update!(
       end_time: Time.now.utc,
       success: true,
-      valid: validity,
+      bag_valid: validity,
       error: validation_errors.join("\n")
     )
   end

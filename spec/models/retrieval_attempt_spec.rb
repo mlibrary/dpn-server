@@ -28,7 +28,7 @@ describe RetrievalAttempt do
   end
 
   describe "::successful" do
-    it "only returns attempts success: true" do
+    it "only returns attempts with success: true" do
       flow = Fabricate(:replication_flow)
       success = Fabricate(:retrieval_attempt, end_time: 1.hour.ago, success: true)
       fail = Fabricate(:retrieval_attempt, end_time: 2.days.ago, success: false, error: "testing")

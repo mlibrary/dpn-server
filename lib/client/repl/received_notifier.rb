@@ -20,7 +20,7 @@ module Client
       end
 
       def notify
-        if attempt.valid?
+        if attempt.bag_valid?
           send_notification(update_query(replication))
         else
           send_notification(cancel_query(replication))

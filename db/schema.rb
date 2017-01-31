@@ -300,7 +300,7 @@ ActiveRecord::Schema.define(version: 20170131162720) do
     t.datetime "start_time",          null: false
     t.datetime "end_time"
     t.boolean  "success"
-    t.boolean  "valid"
+    t.boolean  "bag_valid"
     t.text     "error"
   end
 

@@ -14,7 +14,7 @@ class ReceivedNotifyAttempt < ActiveRecord::Base
   def_delegators :replication_flow,
     :replication_id,
     :fixity_value,
-    :valid?
+    :bag_valid?
 
   def success!
     update!(end_time: Time.now.utc, success: true)
