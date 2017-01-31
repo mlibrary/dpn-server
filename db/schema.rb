@@ -11,21 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170127222333) do
-
-  create_table "bag_man_requests", force: :cascade do |t|
-    t.string   "source_location",                         null: false
-    t.string   "preservation_location"
-    t.integer  "last_step_completed",     default: 0
-    t.string   "fixity"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
-    t.boolean  "cancelled",               default: false
-    t.integer  "replication_transfer_id"
-    t.text     "cancel_reason"
-    t.string   "unpacked_location"
-    t.text     "last_error"
-  end
+ActiveRecord::Schema.define(version: 20170131162720) do
 
   create_table "bags", force: :cascade do |t|
     t.string   "uuid"

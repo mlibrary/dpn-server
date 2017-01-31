@@ -29,31 +29,6 @@ describe ReplicationTransfer, type: :model do
     expect(Fabricate(:replication_transfer, bag: bag, from_node: node, to_node: node)).to be_valid
   end
 
-
-  context "we are the to_node" do
-    it "creates a bag_man_request and calls begin!" do
-      bmr = Fabricate(:bag_man_request)
-      expect(bmr).to receive(:begin!)
-      expect(BagManRequest).to receive(:create!).and_return(bmr)
-      r = Fabricate(:replication_transfer, to_node: Fabricate(:local_node))
-      expect(r.bag_man_request).to be_valid
-    end
-
-    it "cancels bag_man_request when cancelled" do
-      # ReplicationTransfer#cancel! calls BagManRequest#cancel! and then
-      # BagManRequest#cancel! calls back to ReplicationTransfer#cancel! so
-      # there should be 2 calls to ReplicationTransfer#cancel!
-      # There is no infinite loop because ReplicationTransfer#cancelled
-      # is the break point and it is set before calling BagManRequest#cancel!
-      r = Fabricate(:replication_transfer, to_node: Fabricate(:local_node))
-      expect(r.bag_man_request.cancelled).to be false
-      expect(r.bag_man_request).to receive(:cancel!).and_call_original
-      expect(r).to receive(:cancel!).twice.and_call_original
-      r.cancel!('other', 'detail')
-    end
-  end
-
-
   [
     :replication_id,
     :bag,

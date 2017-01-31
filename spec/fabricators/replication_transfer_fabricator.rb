@@ -29,21 +29,11 @@ end
 Fabricator(:replication_transfer_rejected, from: :replication_transfer) do
   cancelled true
   cancel_reason 'reject'
-  after_build { |record|
-    Fabricate(:bag_man_request, status: :rejected, replication_transfer: record)
-  }
 end
 
 
 Fabricator(:replication_transfer_with_fixity_value, from: :replication_transfer) do
   fixity_value { Faker::Internet.password(20) }
-  after_build do |record|
-    Fabricate(:bag_man_request,
-      fixity: Faker::Internet.password(20),
-      validity: true,
-      status: :unpacked,
-      replication_transfer: record)
-  end
 end
 
 
@@ -54,13 +44,6 @@ end
 Fabricator(:replication_transfer_with_stored, from: :replication_transfer) do
   store_requested true
   fixity_value { Faker::Internet.password(20) }
-  after_build do |record|
-    Fabricate(:bag_man_request,
-      fixity: Faker::Internet.password(20),
-      validity: true,
-      status: :preserved,
-      replication_transfer: record)
-  end
 end
 
 Fabricator(:replication_transfer_cancelled, from: :replication_transfer) do

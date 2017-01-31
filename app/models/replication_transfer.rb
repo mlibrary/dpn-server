@@ -23,10 +23,7 @@ class ReplicationTransfer < ActiveRecord::Base
 
   def cancel!(reason, detail)
     unless cancelled
-      transaction do
-        update!(cancelled: true, cancel_reason: reason, cancel_reason_detail: detail)
-        bag_man_request&.cancel!(reason)
-      end
+      update!(cancelled: true, cancel_reason: reason, cancel_reason_detail: detail)
     end
     return true
   end
@@ -40,18 +37,12 @@ class ReplicationTransfer < ActiveRecord::Base
   belongs_to :bag
   belongs_to :fixity_alg
   belongs_to :protocol
-  has_one :bag_man_request, inverse_of: :replication_transfer
 
   validates_associated :from_node
   validates_associated :to_node
   validates_associated :bag
   validates_associated :fixity_alg
   validates_associated :protocol
-
-  ### Callbacks
-  after_create :add_request_if_needed
-  after_update :preserve_if_needed
-
 
   ### Static Validations
   validates :replication_id, presence: true
@@ -119,24 +110,5 @@ class ReplicationTransfer < ActiveRecord::Base
       errors.add(:base, "cannot change a stored record.")
     end
   end
-
-
-  # If we are the to_node, create a bag_man_request and
-  # associate it with this record.
-  def add_request_if_needed
-    if to_node&.local_node?
-      self.bag_man_request = BagManRequest.create!( source_location: link, cancelled: false)
-      self.bag_man_request.begin!
-    end
-  end
-
-  # If we are the to_node and the update
-  # was to request storage, notify the bag_man_request
-  def preserve_if_needed
-    if to_node&.local_node? && self.store_requested_changed?(from: false, to: true)
-      bag_man_request&.okay_to_preserve!
-    end
-  end
-
 
 end
