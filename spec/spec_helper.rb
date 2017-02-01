@@ -3,9 +3,6 @@
 # Licensed according to the terms of the Revised BSD License
 # See LICENSE.md for details.
 
-require "codeclimate-test-reporter"
-CodeClimate::TestReporter.start
-
 require 'simplecov'
 SimpleCov.profiles.define 'dpn-server' do
   add_filter '.binstubs'
