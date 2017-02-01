@@ -24,12 +24,17 @@ module Client
 
 
       def flow_for_replication(replication)
-        ReplicationFlow.find_or_create_by!(
-          replication_id: replication.replication_id,
-          link: replication.link,
-          from_node: replication.from_node.namespace,
-          bag: replication.bag.uuid
-        )
+        flow = ReplicationFlow.find_by_replication_id(replication.replication_id)
+        if flow
+          flow
+        else
+          ReplicationFlow.create!(
+            replication_id: replication.replication_id,
+            link: replication.link,
+            from_node: replication.from_node.namespace,
+            bag: replication.bag.uuid
+          )
+        end
       end
 
 
