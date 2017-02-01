@@ -5,8 +5,6 @@
 
 require 'rails_helper'
 
-require "client/repl/schedule_filter"
-
 describe Client::Repl::RetrievalFilter do
   before(:each) { Fabricate(:local_node) }
   let(:filter) { described_class.new }
