@@ -8,10 +8,23 @@ module Client
 
     class Unpacker
 
-      attr_reader :unpack_attempt
+      Result = Struct.new(:success?, :path, :error)
 
-      def initialize(unpack_attempt)
+      class DefaultMethod
+        Result = Struct.new(:success?, :bag, :error)
+
+        # @raises RuntimeError, IOError, SystemCallError
+        def self.unpack_tar(file)
+          bag = DPN::Bagit::SerializedBag.new(file).unserialize!
+          Result.new(true, bag, nil)
+        end
+      end
+
+      attr_reader :unpack_attempt, :unpack_method
+
+      def initialize(unpack_attempt, unpack_method = DefaultMethod)
         @unpack_attempt = unpack_attempt
+        @unpack_method = unpack_method
       end
 
       def unpack
@@ -23,26 +36,27 @@ module Client
         end
       end
 
+      private
+
       # @param path [String] bag location
       # @return Result that responds to #success?
       def unpack_bag(path)
-        return Struct.new(path: path, success?: true) if File.directory?(path)
+        return Result.new(true, path, nil) if File.directory?(path)
         case File.extname path
         when ".tar"
-          unpack_tar(path)
+          safe_unpack { unpack_method.unpack_tar(path) }
         else
-          Struct.new(success?: false, error: "Unrecognized file type")
+          Result.new(false, nil, "Unrecognized file type #{File.extname(path)}")
         end
       end
 
       # @param file [String] location of a serialized bag (.tar file)
-      def unpack_tar(file)
+      def safe_unpack(&block)
         begin
-          serialized_bag = DPN::Bagit::SerializedBag.new(file)
-          bag = serialized_bag.unserialize!
-          Struct.new(path: bag.location, success?: true)
-        rescue RuntimeError, IOError => e
-          Struct.new(success?: false, error: "#{e.message}\n#{e.stacktrace}")
+          result = block.call
+          Result.new(result.success?, result.bag&.location, result.error)
+        rescue RuntimeError, IOError, SystemCallError => e
+          Result.new(false, nil, "#{e.message}\n#{e.backtrace}")
         end
       end
 
