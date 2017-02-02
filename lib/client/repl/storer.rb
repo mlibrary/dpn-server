@@ -7,8 +7,29 @@ module Client
   module Repl
 
     class Storer
-      def initialize(attempt)
+
+      class DefaultMethod
+        RSYNC_OPTIONS = ["-r -k --partial -q --copy-unsafe-links"]
+        Result = Struct.new(:success?, :error)
+
+        def self.store(source, uuid)
+          pairtree = Pairtree.at(Rails.configuration.repo_dir, create: true)
+          ppath = pairtree.mk(uuid)
+          rsync(File.join(source, "*"), ppath.path)
+        end
+
+        def self.rsync(source, destination)
+          Rsync.run(source, destination, RSYNC_OPTIONS) do |result|
+            result
+          end
+        end
+      end
+
+      Result = Struct.new(:success?, :error)
+
+      def initialize(attempt, store_method = DefaultMethod)
         @attempt = attempt
+        @store_method = store_method
       end
 
       def store
@@ -22,26 +43,17 @@ module Client
 
       private
 
-      attr_reader :attempt
-      RSYNC_OPTIONS = ["-r -k --partial -q --copy-unsafe-links"]
+      attr_reader :attempt, :store_method
 
       def store_bag
         begin
-          pairtree = Pairtree.at(Rails.configuration.repo_dir, create: true)
-          ppath = pairtree.mk(attempt.bag)
-          rsync(File.join(attempt.unpacked_location, "*"), ppath.path)
+          result = store_method.store(attempt.unpacked_location, attempt.bag)
+          Result.new(result.success?, result.error)
         rescue IOError, SystemCallError => e
-          Struct.new(success?: false, error: "#{e.message}\n#{e.backtrace}")
+          Result.new(false, "#{e.message}\n#{e.backtrace}")
         end
       end
-
-
-      def rsync(source, destination)
-        Rsync.run(source, destination, RSYNC_OPTIONS) do |result|
-          result
-        end
-      end
-
     end
+
   end
 end
