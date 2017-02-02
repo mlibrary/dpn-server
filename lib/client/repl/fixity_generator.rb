@@ -8,10 +8,19 @@ module Client
 
     class FixityGenerator
 
-      attr_reader :fixity_attempt
+      class DefaultMethod
+        def self.sha256(location)
+          DPN::Bagit::Bag.new(location).fixity(:sha256)
+        end
+      end
 
-      def initialize(fixity_attempt)
+      Result = Struct.new(:success?, :value, :error)
+
+      attr_reader :fixity_attempt, :fixity_method
+
+      def initialize(fixity_attempt, fixity_method = DefaultMethod)
         @fixity_attempt = fixity_attempt
+        @fixity_method = fixity_method
       end
 
       def generate
@@ -23,12 +32,13 @@ module Client
         end
       end
 
+      private
+
       def fixity(bag_location)
         begin
-          bag = DPN::Bagit::Bag.new(bag_location)
-          Struct.new(success?: true, value: bag.fixity(:sha256))
-        rescue RuntimeError, IOError => e
-          Struct.new(success?: false, error: "#{e.message}\n#{e.stacktrace}")
+          Result.new(true, fixity_method.sha256(bag_location), nil)
+        rescue RuntimeError, IOError, SystemCallError => e
+          Result.new(false, nil, "#{e.message}\n#{e.backtrace}")
         end
       end
 
