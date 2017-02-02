@@ -24,49 +24,9 @@ module Client
       end
     end
 
-    # We now create a number of subclasses to facilitate ActiveJob creation
-    # of schedulers, as ActiveJob does not handle being queued with an object
-    # very well.
-
-    class RetrievalScheduler < Scheduler
-      def initialize
-        super(RetrievalJob, RetrievalFilter, :retrieval_attempt)
-      end
-    end
-
-    class UnpackScheduler < Scheduler
-      def initialize
-        super(UnpackJob, UnpackFilter, :unpack_attempt)
-      end
-    end
-
-    class ValidateScheduler < Scheduler
-      def initialize
-        super(ValidateJob, ValidateFilter, :validate_attempt)
-      end
-    end
-
-    class FixityScheduler < Scheduler
-      def initialize
-        super(FixityJob, FixityFilter, :fixity_attempt)
-      end
-    end
-
-    class ReceivedNotifyScheduler < Scheduler
-      def initialize
-        super(ReceivedNotifyJob, ReceivedNotifyFilter, :received_notify_attempt)
-      end
-    end
-
-    class StoreScheduler < Scheduler
-      def initialize
-        super(StoreJob, StoreFilter, :store_attempt)
-      end
-    end
-
-    class StoredNotifyScheduler < Scheduler
-      def initialize
-        super(StoredNotifyJob, StoredNotifyFilter, :stored_notify_attempt)
+    class Jobby
+      def perform(jobclass, filterclass, attempt_type)
+        Scheduler.new(jobclass, filterclass.new, attempt_type).schedule
       end
     end
 
