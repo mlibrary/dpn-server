@@ -7,7 +7,7 @@
 require 'rails_helper'
 
 describe StoredNotifyAttempt do
-  it_behaves_like "an attempt", [:replication_id] do
+  it_behaves_like "an attempt", [] do
     let(:fabricator) { :stored_notify_attempt }
     let(:success_args) { [] }
     let(:failure_args) { [] }
