@@ -4,25 +4,57 @@
 # See LICENSE.md for details.
 
 
-require 'rails_helper'
+require 'spec_helper'
 
 describe Client::Repl::Retriever do
-  describe "#rsync" do
-    let(:source) { "source" }
-    let(:dest) { "dest" }
-    let(:result) { double(:result, :success => true )}
-    let(:retriever) { described_class.new(double(:attempt))}
-    before(:each) do
-      allow(Rsync).to receive(:run) { result }
-    end
+  let(:source) { "source" }
+  let(:dest) { "dest" }
+  let(:attempt) do
+    double(:attempt,
+      source_location: source, staging_location: dest,
+      success!: nil, failure!: nil
+    )
+  end
+  let(:transfer_method) { double(:transfer_method, run: result) }
+  let(:retriever) { described_class.new(attempt, transfer_method)}
 
-    it "it copies from source to dest" do
-      expect(Rsync).to receive(:run).once.with(source, dest, Client::Repl::Retriever::RSYNC_OPTIONS)
-      retriever.rsync(source, dest)
+  context "success" do
+    let(:result) { double(:result, :success? => true )}
+    it "tries to copy from source to destination" do
+      retriever.retrieve
+      expect(transfer_method).to have_received(:run)
+        .with(source, dest, anything)
     end
+    it "calls success! on the attempt" do
+      retriever.retrieve
+      expect(attempt).to have_received(:success!).with(no_args)
+    end
+  end
 
-    it "returns the result from rsync" do
-      expect(retriever.rsync(source, dest)).to eql(result)
+  context "failure" do
+    let(:error) { "some\n\n\nlong\nerror" }
+    let(:result) { double(:result, :success? => false, error: error) }
+    it "tries to copy from source to destination" do
+      retriever.retrieve
+      expect(transfer_method).to have_received(:run)
+        .with(source, dest, anything)
+    end
+    it "calls failure! on the attempt with the error" do
+      retriever.retrieve
+      expect(attempt).to have_received(:failure!).with(error)
+    end
+  end
+
+  context "Errno:ENOENT" do
+    let(:transfer_method) { double(:transfer_method) }
+    before(:each) { allow(transfer_method).to receive(:run).and_raise(Errno::ENOENT) }
+    it "catches the error" do
+      expect {retriever.retrieve}.to_not raise_error
+    end
+    it "calls failure! on the attempt with the exception's message" do
+      retriever.retrieve
+      expect(attempt).to have_received(:failure!)
+        .with(a_string_matching(/No such file or directory.*/))
     end
   end
 

@@ -8,7 +8,7 @@ module Client
 
     class Retriever
 
-      attr_reader :retrieval_attempt
+      attr_reader :retrieval_attempt, :transfer_method
 
       SSH_OPTIONS = [
         "-o BatchMode=yes",
@@ -22,12 +22,15 @@ module Client
 
       RSYNC_OPTIONS = ["-a --partial -q -k --copy-unsafe-links -e 'ssh #{SSH_OPTIONS.join(" ")}' "]
 
-      def initialize(retrieval_attempt)
+      Result = Struct.new(:success?, :error)
+
+      def initialize(retrieval_attempt, transfer_method = Rsync)
         @retrieval_attempt = retrieval_attempt
+        @transfer_method = transfer_method
       end
       
       def retrieve
-        result = rsync(retrieval_attempt.source_location, retrieval_attempt.staging_location)
+        result = transfer(retrieval_attempt.source_location, retrieval_attempt.staging_location)
         if result.success?
           retrieval_attempt.success!
         else
@@ -36,14 +39,14 @@ module Client
       end
 
       # returns a Result
-      def rsync(source, destination)
+      def transfer(source, destination)
         begin
           FileUtils.mkdir_p(destination) unless File.exist? destination
-          Rsync.run(source, destination, RSYNC_OPTIONS) do |result|
+          transfer_method.run(source, destination, RSYNC_OPTIONS) do |result|
             result
           end
         rescue IOError, SystemCallError => e
-          Struct.new(success?: false, error: "#{e.message}\n#{e.backtrace}")
+          Result.new(false, "#{e.message}\n#{e.backtrace.join("\n")}")
         end
       end
 
