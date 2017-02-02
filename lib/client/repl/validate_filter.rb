@@ -11,10 +11,9 @@ module Client
       def flows
         ReplicationFlow
           .includes(:validate_attempts)
-          .retrieved
-          .unpacked
-          .not.validated
-          .not.validate_ongoing
+          .successful(:retrieval_attempts)
+          .successful(:unpack_attempts)
+          .select{|flow| !flow.validated? && !flow.validate_ongoing?}
       end
     end
 

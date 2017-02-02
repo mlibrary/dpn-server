@@ -11,11 +11,10 @@ module Client
       def flows
         ReplicationFlow
           .includes(:fixity_attempts)
-          .retrieved
-          .unpacked
-          .fixityd
-          .not.fixity_complete
-          .not.fixity_ongoing
+          .successful(:retrieval_attempts)
+          .successful(:unpack_attempts)
+          .successful(:validate_attempts)
+          .select{|flow| !flow.fixity_complete? && !flow.fixity_ongoing?}
       end
     end
 

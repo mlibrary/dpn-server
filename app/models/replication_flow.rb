@@ -113,44 +113,11 @@ class ReplicationFlow < ActiveRecord::Base
     fixity_attempts.successful.first.value
   end
 
+  def self.successful(table)
+    joins(table).where(table => {success: true})
+  end
 
-  scope :retrieved, -> { joins(:retrieval_attempts).where(retrieval_attempts: {success: true}) }
-  scope :retrieval_ongoing, -> {
-    joins(:retrieval_attempts).where(retrieval_attempts: {end_time: nil} )
-  }
-
-  scope :unpacked, -> { joins(:unpack_attempts).where(unpack_attempts: {success: true}) }
-  scope :unpack_ongoing, -> {
-    joins(:unpack_attempts).where(unpack_attempts: {end_time: nil} )
-  }
-
-  scope :validated, -> { joins(:validate_attempts).where(validate_attempts: {success: true}) }
-  scope :validate_ongoing, -> {
-    joins(:validate_attempts).where(validate_attempts: {end_time: nil} )
-  }
-
-  scope :fixity_complete, -> { joins(:fixity_attempts).where(fixity_attempts: {success: true}) }
-  scope :fixity_ongoing, -> {
-    joins(:fixity_attempts).where(fixity_attempts: {end_time: nil} )
-  }
-
-  scope :received_notified, -> {
-    joins(:received_notify_attempts).where(received_notify_attempts: {success: true})
-  }
-  scope :received_notify_ongoing, -> {
-    joins(:received_notify_attempts).where(received_notify_attempts: {end_time: nil} )
-  }
-
-  scope :stored, -> { joins(:store_attempts).where(store_attempts: {success: true}) }
-  scope :store_ongoing, -> {
-    joins(:store_attempts).where(store_attempts: {end_time: nil} )
-  }
-
-  scope :stored_notified, -> {
-    joins(:stored_notify_attempts).where(stored_notify_attempts: {success: true})
-  }
-  scope :stored_notify_ongoing, -> {
-    joins(:stored_notify_attempts).where(stored_notify_attempts: {end_time: nil} )
-  }
-
+  def self.ongoing(table)
+    joins(table).where(table => {end_time: nil})
+  end
 end
