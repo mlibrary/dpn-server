@@ -268,7 +268,7 @@ describe ReplicationTransferUpdater do
     describe "#update" do
       let(:changes) { {store_requested: true} }
       let(:update_poro) { described_class.new(record, params(record, changes)) }
-      shared_examples "StoreRequestedUpdate#update basics" do
+      shared_examples "StoreRequestedUpdate#update" do
         it "updates the record" do
           update_poro.update
           expect(record.store_requested).to be true
@@ -290,44 +290,26 @@ describe ReplicationTransferUpdater do
           expect(record.stored).to be false
         end
       end
-      shared_examples "StoreRequestedUpdate#update as replicator" do
-        include_examples "StoreRequestedUpdate#update basics"
-        it "requests preservation" do
-          bag_man_request = double(:bag_man_request)
-          allow(record).to receive(:bag_man_request).and_return(bag_man_request)
-          expect(bag_man_request).to receive(:okay_to_preserve!)
-          update_poro.update
-        end
-      end
-      shared_examples "StoreRequestedUpdate#update as nobody" do
-        include_examples "StoreRequestedUpdate#update basics"
-        it "does not request preservation" do
-          bag_man_request = double(:bag_man_request)
-          allow(record).to receive(:bag_man_request).and_return(bag_man_request)
-          expect(bag_man_request).to_not receive(:okay_to_preserve!)
-          update_poro.update
-        end
-      end
 
       context "local->other" do
         let(:record) { Fabricate(:replication_transfer, store_requested: false,
           from_node: Fabricate(:local_node), to_node: Fabricate(:node))}
-        it_behaves_like "StoreRequestedUpdate#update as nobody"
+        it_behaves_like "StoreRequestedUpdate#update"
       end
       context "local->local" do
         let(:record) { Fabricate(:replication_transfer, store_requested: false,
           from_node: Fabricate(:local_node), to_node: Node.local_node!)}
-        it_behaves_like "StoreRequestedUpdate#update as replicator"
+        it_behaves_like "StoreRequestedUpdate#update"
       end
       context "other->other" do
         let(:record) { Fabricate(:replication_transfer, store_requested: false,
           from_node: Fabricate(:node), to_node: Fabricate(:node))}
-        it_behaves_like "StoreRequestedUpdate#update as nobody"
+        it_behaves_like "StoreRequestedUpdate#update"
       end
       context "other->local" do
         let(:record) { Fabricate(:replication_transfer, store_requested: false,
           from_node: Fabricate(:node), to_node: Fabricate(:local_node))}
-        it_behaves_like "StoreRequestedUpdate#update as replicator"
+        it_behaves_like "StoreRequestedUpdate#update"
       end
     end
   end

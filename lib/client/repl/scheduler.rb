@@ -24,11 +24,5 @@ module Client
       end
     end
 
-    class Jobby
-      def perform(jobclass, filterclass, attempt_type)
-        Scheduler.new(jobclass, filterclass.new, attempt_type).schedule
-      end
-    end
-
   end
 end
