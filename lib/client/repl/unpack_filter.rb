@@ -9,13 +9,10 @@ module Client
 
     class UnpackFilter
       def flows
-        def flows
-          ReplicationFlow
-            .includes(:unpack_attempts)
-            .retrieved
-            .not.unpacked
-            .not.unpack_ongoing
-        end
+        ReplicationFlow
+          .includes(:unpack_attempts)
+          .successful(:retrieval_attempts)
+          .select{|flow| !flow.unpacked? && !flow.unpack_ongoing?}
       end
     end
 

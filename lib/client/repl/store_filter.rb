@@ -11,14 +11,13 @@ module Client
       def flows
         ReplicationFlow
           .includes(:store_attempts)
-          .retrieved
-          .unpacked
-          .validated
-          .fixity_complete
-          .received_notified
-          .not.stored
-          .not.store_ongoing
-          .select{|flow| replication.include?(flow.replication_id)}
+          .successful(:retrieval_attempts)
+          .successful(:unpack_attempts)
+          .successful(:validate_attempts)
+          .successful(:fixity_attempts)
+          .successful(:received_notify_attempts)
+          .select{|flow| !flow.stored? && !flow.store_ongoing?}
+          .select{|flow| replications.include?(flow.replication_id)}
       end
 
       private
@@ -29,7 +28,6 @@ module Client
           .where(cancelled: false)
           .where(stored: false)
           .where(store_requested: true)
-          .where.not(fixity_value: nil)
           .pluck(:replication_id))
       end
     end

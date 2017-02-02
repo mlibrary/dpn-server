@@ -11,14 +11,13 @@ module Client
       def flows
         ReplicationFlow
           .includes(:stored_notify_attempts)
-          .retrieved
-          .unpacked
-          .validated
-          .fixity_complete
-          .received_notified
-          .stored
-          .not.stored_notified
-          .not.stored_notify_ongoing
+          .successful(:retrieval_attempts)
+          .successful(:unpack_attempts)
+          .successful(:validate_attempts)
+          .successful(:fixity_attempts)
+          .successful(:received_notify_attempts)
+          .successful(:store_attempts)
+          .select{|flow| !flow.stored_notified? && !flow.stored_notify_ongoing?}
       end
     end
 
