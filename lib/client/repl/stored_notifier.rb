@@ -7,17 +7,26 @@ module Client
   module Repl
 
     class StoredNotifier
-      include Common
+      class DefaultMethod
+        include Common
+        Result = Struct.new(:success?, :error)
+        def self.notify(query)
+          remote_client.execute query do |response|
+            Result.new(response.success?, response.body)
+          end
+        end
+      end
 
-      attr_reader :attempt
+      attr_reader :attempt, :notify_method
 
-      def initialize(attempt)
+      def initialize(attempt, notify_method = DefaultMethod)
         @attempt = attempt
+        @notify_method = notify_method
       end
 
 
       def notify
-        result = send_notification(update_query)
+        result = notify_method.notify(update_query)
         if result.success?
           attempt.success!
         else
@@ -25,19 +34,13 @@ module Client
         end
       end
 
+      private
 
       def update_query
-        replication = ReplicationTransfer.find_by_replication_id(attempt.replication_id)
-        replication.stored = true
+        replication = attempt.replication
         body =  ReplicationTransferAdapter.from_model(replication).to_public_hash
+        body[:stored] = true
         Query.new(:update_replication, body)
-      end
-
-
-      def send_notification(query)
-        remote_client.execute query do |response|
-          Struct.new(success?: response.success?, error: response.body)
-        end
       end
 
     end
