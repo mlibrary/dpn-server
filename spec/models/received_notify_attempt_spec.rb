@@ -7,7 +7,7 @@
 require 'rails_helper'
 
 describe ReceivedNotifyAttempt do
-  it_behaves_like "an attempt", [:replication_id, :fixity_value, :bag_valid?] do
+  it_behaves_like "an attempt", [:fixity_value, :bag_valid?] do
     let(:fabricator) { :received_notify_attempt }
     let(:success_args) { [] }
     let(:failure_args) { [] }

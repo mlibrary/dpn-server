@@ -12,9 +12,12 @@ class ReceivedNotifyAttempt < ActiveRecord::Base
   scope :successful, -> { where(success: true) }
 
   def_delegators :replication_flow,
-    :replication_id,
     :fixity_value,
     :bag_valid?
+
+  def replication
+    ReplicationTransfer.find_by_replication_id(replication_flow.replication_id)
+  end
 
   def success!
     update!(end_time: Time.now.utc, success: true)
