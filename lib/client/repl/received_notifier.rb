@@ -7,46 +7,59 @@ module Client
   module Repl
 
     class ReceivedNotifier
-      include Common
-
-      attr_reader :attempt
-
-      def initialize(attempt)
-        @attempt = attempt
-      end
-
-      def replication
-        ReplicationTransfer.find_by_replication_id(attempt.replication_id)
-      end
-
-      def notify
-        if attempt.bag_valid?
-          send_notification(update_query(replication))
-        else
-          send_notification(cancel_query(replication))
+      class DefaultMethod
+        include Common
+        Result = Struct.new(:success?, :error)
+        def self.notify(query)
+          remote_client.execute query do |response|
+            Result.new(response.success?, response.body)
+          end
         end
       end
 
+      attr_reader :attempt, :notify_method
+
+      def initialize(attempt, notify_method)
+        @attempt = attempt
+        @notify_method = notify_method
+      end
+
+
+      def notify
+        if attempt.bag_valid?
+          send_notification(update_query(attempt.replication))
+        else
+          send_notification(cancel_query(attempt.replication))
+        end
+      end
+
+      private
+
+      def body(replication)
+        ReplicationTransferAdapter.from_model(replication).to_public_hash
+      end
+
       def cancel_query(replication)
-        replication.cancelled = true
-        replication.fixity_value = attempt.fixity_value
-        replication.cancel_reason = 'bag_invalid'
-        replication.cancel_reason_detail = attempt.validation_errors
-        Query.new(:update_replication, ReplicationTransferAdapter.from_model(replication).to_public_hash)
+        body = body(replication)
+        body[:cancelled] = true
+        body[:fixity_value] = attempt.fixity_value
+        body[:cancel_reason] = 'bag_invalid'
+        body[:cancel_reason_detail] = [attempt.validation_errors].flatten.join("\n")
+        Query.new(:update_replication, body)
       end
 
       def update_query(replication)
-        replication.fixity_value = attempt.fixity_value
-        Query.new(:update_replication, ReplicationTransferAdapter.from_model(replication).to_public_hash)
+        body = body(replication)
+        body[:fixity_value] = attempt.fixity_value
+        Query.new(:update_replication, body)
       end
 
       def send_notification(query)
-        remote_client.execute query do |response|
-          if response.success?
-            attempt.success!
-          else
-            attempt.failure!(response.body)
-          end
+        result = notify_method.notify(query)
+        if result.success?
+          attempt.success!
+        else
+          attempt.failure!(result.error)
         end
       end
 
