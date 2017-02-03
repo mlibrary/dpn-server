@@ -13,7 +13,8 @@ class ReceivedNotifyAttempt < ActiveRecord::Base
 
   def_delegators :replication_flow,
     :fixity_value,
-    :bag_valid?
+    :bag_valid?,
+    :validation_errors
 
   def replication
     ReplicationTransfer.find_by_replication_id(replication_flow.replication_id)
