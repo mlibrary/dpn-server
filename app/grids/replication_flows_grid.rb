@@ -28,8 +28,11 @@ class ReplicationFlowsGrid
   column(:so?) {|flow| flow.store_ongoing? }
   column(:sn?) {|flow| flow.stored_notified? }
   column(:sno?) {|flow| flow.stored_notify_ongoing? }
-  column(:img_test, html: true) { image_tag("green.gif") }
 
-
-
+  ["retrieval", "unpack", "validate", "fixity",
+    "received_notify", "store", "stored_notify"].each do |t|
+    column("#{t}_attempts".to_sym, header: t.capitalize) do |flow|
+      flow.public_send("#{t}_attempts".to_sym).order(:id).pluck(:id)
+    end
+  end
 end
