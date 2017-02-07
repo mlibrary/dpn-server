@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     mount DpnSwaggerEngine::Engine, at: '/api-docs'
 
     namespace :glance do
-      resources :replication_transfers
+      resources :replication_flows
     end
   end
 
