@@ -73,6 +73,8 @@ GEM
     configliere (0.4.22)
       highline (= 1.5.2)
       multi_json (~> 1.10.1)
+    datagrid (1.5.1)
+      rails (>= 3.2.22.2)
     debug_inspector (0.0.2)
     devise (4.2.0)
       bcrypt (~> 3.0)
@@ -281,6 +283,7 @@ DEPENDENCIES
   cancan
   codeclimate-test-reporter
   coffee-rails
+  datagrid
   devise
   dpn-bagit (~> 0.3.0)
   dpn-client (~> 2.0.0)!

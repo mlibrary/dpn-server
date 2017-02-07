@@ -46,6 +46,8 @@ gem 'rsync', '~>1.0.9'
 
 gem 'sdoc', '~> 0.4.0', group: :doc
 
+gem 'datagrid'
+
 # Note: These are not in a group block because doing
 #       so breaks group block usage in Gemfile.local
 gem 'sqlite3', group: [:development, :test]
