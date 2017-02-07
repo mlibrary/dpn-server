@@ -98,11 +98,11 @@ class ReplicationFlow < ActiveRecord::Base
   end
 
   def unpacked_location
-    unpack_attempts.successful.first.unpacked_location
+    unpack_attempts.successful.first&.unpacked_location || ""
   end
 
   def bag_valid?
-    validate_attempts.successful.first.bag_valid?
+    validate_attempts.successful.first&.bag_valid?
   end
 
   def validation_errors
@@ -110,7 +110,7 @@ class ReplicationFlow < ActiveRecord::Base
   end
 
   def fixity_value
-    fixity_attempts.successful.first.value
+    fixity_attempts.successful.first&.value || ""
   end
 
   def self.successful(table)
