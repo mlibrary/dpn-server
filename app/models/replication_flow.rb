@@ -94,7 +94,7 @@ class ReplicationFlow < ActiveRecord::Base
   end
 
   def staging_location
-    File.join(Rails.configuration.staging_dir.to_s, from_node, bag)
+    File.join(Rails.configuration.staging_dir.to_s, from_node, File.basename(link))
   end
 
   def unpacked_location

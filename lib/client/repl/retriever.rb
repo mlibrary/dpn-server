@@ -41,7 +41,8 @@ module Client
       # returns a Result
       def transfer(source, destination)
         begin
-          FileUtils.mkdir_p(destination) unless File.exist? destination
+          parent_folder = File.dirname(destination)
+          FileUtils.mkdir_p(parent_folder) unless File.exist?(parent_folder)
           transfer_method.run(source, destination, RSYNC_OPTIONS) do |result|
             result
           end
