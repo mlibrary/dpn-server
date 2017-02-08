@@ -8,7 +8,7 @@ class CreateValidateAttempts < ActiveRecord::Migration
       t.boolean :bag_valid,           null: true, default: nil
       t.text :error,                  null: true
     end
-    add_foreign_key :unpack_attempts, :replication_flows
+    add_foreign_key :validate_attempts, :replication_flows
 
   end
 end
