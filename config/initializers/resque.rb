@@ -174,7 +174,7 @@ module ResqueInit
 
     schedule["retrieval_scheduler"] = {
       description: "Schedule retrievals",
-      every: ["4h", {first_in: "15m"} ],
+      every: ["1h", {first_in: "15m"} ],
       class: Client::Repl::SchedulerJob.to_s,
       queue: "repl",
       args: [
@@ -186,7 +186,7 @@ module ResqueInit
 
     schedule["unpack_scheduler"] = {
       description: "Schedule unpacks",
-      every: ["4h", {first_in: "15m"} ],
+      every: ["1h", {first_in: "15m"} ],
       class: Client::Repl::SchedulerJob.to_s,
       queue: "repl",
       args: [
@@ -198,7 +198,7 @@ module ResqueInit
 
     schedule["validate_scheduler"] = {
       description: "Schedule validation",
-      every: ["4h", {first_in: "15m"} ],
+      every: ["1h", {first_in: "15m"} ],
       class: Client::Repl::SchedulerJob.to_s,
       queue: "repl",
       args: [
@@ -210,7 +210,7 @@ module ResqueInit
 
     schedule["fixity_scheduler"] = {
       description: "Schedule fixity generation",
-      every: ["4h", {first_in: "15m"} ],
+      every: ["1h", {first_in: "15m"} ],
       class: Client::Repl::SchedulerJob.to_s,
       queue: "repl",
       args: [
@@ -222,7 +222,7 @@ module ResqueInit
 
     schedule["received_notify_scheduler"] = {
       description: "Schedule notification of receipt",
-      every: ["4h", {first_in: "15m"} ],
+      every: ["1h", {first_in: "15m"} ],
       class: Client::Repl::SchedulerJob.to_s,
       queue: "repl",
       args: [
@@ -234,7 +234,7 @@ module ResqueInit
 
     schedule["store_scheduler"] = {
       description: "Schedule storing bags",
-      every: ["4h", {first_in: "15m"} ],
+      every: ["1h", {first_in: "15m"} ],
       class: Client::Repl::SchedulerJob.to_s,
       queue: "repl",
       args: [
@@ -246,7 +246,7 @@ module ResqueInit
 
     schedule["stored_notify_scheduler"] = {
       description: "Schedule notification of storage",
-      every: ["4h", {first_in: "15m"} ],
+      every: ["1h", {first_in: "15m"} ],
       class: Client::Repl::SchedulerJob.to_s,
       queue: "repl",
       args: [
