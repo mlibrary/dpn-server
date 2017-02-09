@@ -3,6 +3,8 @@
 # Licensed according to the terms of the Revised BSD License
 # See LICENSE.md for details.
 
+require 'pairtree'
+
 module Client
   module Repl
 
@@ -10,7 +12,6 @@ module Client
 
       class DefaultMethod
         RSYNC_OPTIONS = ["-r -k --partial -q --copy-unsafe-links"]
-        Result = Struct.new(:success?, :error)
 
         def self.store(source, uuid)
           pairtree = Pairtree.at(Rails.configuration.repo_dir, create: true)
