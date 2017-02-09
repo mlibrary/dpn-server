@@ -11,6 +11,7 @@ describe Client::Repl::StoredNotifier do
   let(:replication) { Fabricate(:replication_transfer, stored: true) }
   let(:attempt) do
     double(:attempt,
+      from_node: "somenode",
       replication: replication,
       success!: nil, failure!: nil
     )
@@ -27,8 +28,12 @@ describe Client::Repl::StoredNotifier do
   context "success" do
     let(:result) { double(:result, success?: true, error: nil)}
     it "notifies" do
-      notifier.notify
-      expect(notify_method).to have_received(:notify).with(query)
+      notifier.notify # We use the verbose expectation below for better debugging output.
+      expect(notify_method).to have_received(:notify) do |arg1, arg2|
+        expect(arg1).to eql("somenode")
+        expect(arg2.type).to eql(query.type)
+        expect(arg2.params).to eql(query.params)
+      end
     end
     it "calls success! on the attempt with validity, errors" do
       notifier.notify
@@ -40,8 +45,12 @@ describe Client::Repl::StoredNotifier do
     let(:error) { "some\n\nlong\n\terror" }
     let(:result) { double(:result, success?: false, error: error)}
     it "notifies" do
-      notifier.notify
-      expect(notify_method).to have_received(:notify).with(query)
+      notifier.notify # We use the verbose expectation below for better debugging output.
+      expect(notify_method).to have_received(:notify) do |arg1, arg2|
+        expect(arg1).to eql("somenode")
+        expect(arg2.type).to eql(query.type)
+        expect(arg2.params).to eql(query.params)
+      end
     end
     it "calls failure! on the attempt with error" do
       notifier.notify

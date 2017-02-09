@@ -13,6 +13,7 @@ describe Client::Repl::ReceivedNotifier do
   let(:validation_errors) { ["one", "two", "three"] }
   let(:attempt) do
     double(:attempt,
+      from_node: "somenode",
       fixity_value: fixity,
       bag_valid?: bag_validity,
       validation_errors: validation_errors,
@@ -45,9 +46,10 @@ describe Client::Repl::ReceivedNotifier do
       let(:result) { double(:result, success?: true, error: nil)}
       it "notifies" do
         notifier.notify # We use the verbose expectation below for better debugging output.
-        expect(notify_method).to have_received(:notify) do |arg|
-          expect(arg.type).to eql(query.type)
-          expect(arg.params).to eql(query.params)
+        expect(notify_method).to have_received(:notify) do |arg1, arg2|
+          expect(arg1).to eql("somenode")
+          expect(arg2.type).to eql(query.type)
+          expect(arg2.params).to eql(query.params)
         end
       end
       it "calls success! on the attempt with validity, errors" do
@@ -61,9 +63,10 @@ describe Client::Repl::ReceivedNotifier do
       let(:result) { double(:result, success?: false, error: error)}
       it "notifies" do
         notifier.notify # We use the verbose expectation below for better debugging output.
-        expect(notify_method).to have_received(:notify) do |arg|
-          expect(arg.type).to eql(query.type)
-          expect(arg.params).to eql(query.params)
+        expect(notify_method).to have_received(:notify) do |arg1, arg2|
+          expect(arg1).to eql("somenode")
+          expect(arg2.type).to eql(query.type)
+          expect(arg2.params).to eql(query.params)
         end
       end
       it "calls failure! on the attempt with error" do
