@@ -12,6 +12,7 @@ class ReceivedNotifyAttempt < ActiveRecord::Base
   scope :successful, -> { where(success: true) }
 
   def_delegators :replication_flow,
+    :from_node,
     :fixity_value,
     :bag_valid?,
     :validation_errors

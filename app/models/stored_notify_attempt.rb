@@ -4,10 +4,15 @@
 # See LICENSE.md for details.
 
 class StoredNotifyAttempt < ActiveRecord::Base
+  extend Forwardable
+
   belongs_to :replication_flow
 
   scope :ongoing, -> { where(end_time: nil) }
   scope :successful, -> { where(success: true) }
+
+  def_delegators :replication_flow,
+    :from_node
 
   def replication
     ReplicationTransfer.find_by_replication_id(replication_flow.replication_id)
