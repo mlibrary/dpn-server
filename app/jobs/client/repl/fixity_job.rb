@@ -10,7 +10,7 @@ module Client
       queue_as :repl
 
       def perform(fixity_attempt)
-        FixityGenerator.new(fixity_attempt).generate_fixity
+        FixityGenerator.new(fixity_attempt).generate
       end
 
     end
