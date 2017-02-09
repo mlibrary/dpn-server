@@ -12,7 +12,11 @@ module Client
       queue_as :repl
 
       def perform(jobclass, filterclass, attempt_type)
-        Scheduler.new(jobclass, filterclass.new, attempt_type).schedule
+        Scheduler.new(
+          jobclass.constantize,
+          filterclass.constantize.new,
+          attempt_type.to_sym
+        ).schedule
       end
     end
 
