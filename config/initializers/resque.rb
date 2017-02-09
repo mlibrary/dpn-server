@@ -172,6 +172,91 @@ module ResqueInit
       end
     end
 
+    schedule["retrieval_scheduler"] = {
+      description: "Schedule retrievals",
+      every: ["4h", {first_in: "15m"} ],
+      class: Client::Repl::SchedulerJob.to_s,
+      queue: "repl",
+      args: [
+        Client::Repl::RetrievalJob.to_s,
+        Client::Repl::RetrievalFilter.to_s,
+        "retrieval_attempt"
+      ]
+    }
+
+    schedule["unpack_scheduler"] = {
+      description: "Schedule unpacks",
+      every: ["4h", {first_in: "15m"} ],
+      class: Client::Repl::SchedulerJob.to_s,
+      queue: "repl",
+      args: [
+        Client::Repl::UnpackJob.to_s,
+        Client::Repl::UnpackFilter.to_s,
+        "unpack_attempt"
+      ]
+    }
+
+    schedule["validate_scheduler"] = {
+      description: "Schedule validation",
+      every: ["4h", {first_in: "15m"} ],
+      class: Client::Repl::SchedulerJob.to_s,
+      queue: "repl",
+      args: [
+        Client::Repl::ValidateJob.to_s,
+        Client::Repl::ValidateFilter.to_s,
+        "validate_attempt"
+      ]
+    }
+
+    schedule["fixity_scheduler"] = {
+      description: "Schedule fixity generation",
+      every: ["4h", {first_in: "15m"} ],
+      class: Client::Repl::SchedulerJob.to_s,
+      queue: "repl",
+      args: [
+        Client::Repl::FixityJob.to_s,
+        Client::Repl::FixityFilter.to_s,
+        "fixity_attempt"
+      ]
+    }
+
+    schedule["received_notify_scheduler"] = {
+      description: "Schedule notification of receipt",
+      every: ["4h", {first_in: "15m"} ],
+      class: Client::Repl::SchedulerJob.to_s,
+      queue: "repl",
+      args: [
+        Client::Repl::ReceivedNotifyJob.to_s,
+        Client::Repl::ReceivedNotifyFilter.to_s,
+        "received_notify_attempt"
+      ]
+    }
+
+    schedule["store_scheduler"] = {
+      description: "Schedule storing bags",
+      every: ["4h", {first_in: "15m"} ],
+      class: Client::Repl::SchedulerJob.to_s,
+      queue: "repl",
+      args: [
+        Client::Repl::StoreJob.to_s,
+        Client::Repl::StoreFilter.to_s,
+        "store_attempt"
+      ]
+    }
+
+    schedule["stored_notify_scheduler"] = {
+      description: "Schedule notification of storage",
+      every: ["4h", {first_in: "15m"} ],
+      class: Client::Repl::SchedulerJob.to_s,
+      queue: "repl",
+      args: [
+        Client::Repl::StoredNotifyJob.to_s,
+        Client::Repl::StoredNotifyFilter.to_s,
+        "stored_notify_attempt"
+      ]
+    }
+
+
     return schedule
     end
   end
