@@ -10,7 +10,7 @@ module Client
       queue_as :repl
 
       def perform(validate_attempt)
-        Validater.new(validate_attempt).validate
+        Validator.new(validate_attempt).validate
       end
 
     end
