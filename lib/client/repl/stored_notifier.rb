@@ -8,12 +8,14 @@ module Client
 
     class StoredNotifier
       class DefaultMethod
-        include Common
+        extend  Client::Common
         Result = Struct.new(:success?, :error)
-        def self.notify(query)
-          remote_client.execute query do |response|
-            Result.new(response.success?, response.body)
+        def self.notify(namespace, query)
+          result = Result.new(false, "empty")
+          remote_client(namespace).execute query do |response|
+            result = Result.new(response.success?, response.body)
           end
+          return result
         end
       end
 
@@ -26,7 +28,7 @@ module Client
 
 
       def notify
-        result = notify_method.notify(update_query)
+        result = notify_method.notify(attempt.from_node, update_query)
         if result.success?
           attempt.success!
         else

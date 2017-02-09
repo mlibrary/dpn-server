@@ -8,18 +8,20 @@ module Client
 
     class ReceivedNotifier
       class DefaultMethod
-        include Common
+        extend Client::Common
         Result = Struct.new(:success?, :error)
-        def self.notify(query)
-          remote_client.execute query do |response|
-            Result.new(response.success?, response.body)
+        def self.notify(namespace, query)
+          result = Result.new(false, "empty")
+          remote_client(namespace).execute query do |response|
+            result = Result.new(response.success?, response.body)
           end
+          return result
         end
       end
 
       attr_reader :attempt, :notify_method
 
-      def initialize(attempt, notify_method)
+      def initialize(attempt, notify_method = DefaultMethod)
         @attempt = attempt
         @notify_method = notify_method
       end
@@ -55,7 +57,7 @@ module Client
       end
 
       def send_notification(query)
-        result = notify_method.notify(query)
+        result = notify_method.notify(attempt.from_node, query)
         if result.success?
           attempt.success!
         else
