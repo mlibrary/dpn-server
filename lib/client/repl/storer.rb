@@ -37,6 +37,8 @@ module Client
         result = store_bag
         if result.success?
           attempt.success!
+          FileUtils.remove_entry_secure attempt.staging_location
+          FileUtils.remove_entry_secure attempt.unpacked_location
         else
           attempt.failure!(result.error)
         end

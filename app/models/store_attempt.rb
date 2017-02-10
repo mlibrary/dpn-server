@@ -13,6 +13,7 @@ class StoreAttempt < ActiveRecord::Base
 
   def_delegators :replication_flow,
     :bag,
+    :staging_location,
     :unpacked_location
 
   def success!
