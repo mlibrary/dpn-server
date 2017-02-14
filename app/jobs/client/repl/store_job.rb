@@ -7,7 +7,7 @@ module Client
   module Repl
 
     class StoreJob < ActiveJob::Base
-      queue_as :repl
+      queue_as :repl_store
 
       def perform(store_attempt)
         Storer.new(store_attempt).store

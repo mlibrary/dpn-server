@@ -7,7 +7,7 @@ module Client
   module Repl
 
     class ValidateJob < ActiveJob::Base
-      queue_as :repl
+      queue_as :repl_validate
 
       def perform(validate_attempt)
         Validator.new(validate_attempt).validate

@@ -7,7 +7,7 @@ module Client
   module Repl
 
     class RetrievalJob < ActiveJob::Base
-      queue_as :repl
+      queue_as :repl_retrieval
 
       def perform(retrieval_attempt)
         Retriever.new(retrieval_attempt).retrieve

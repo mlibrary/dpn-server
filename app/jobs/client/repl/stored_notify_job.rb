@@ -7,7 +7,7 @@ module Client
   module Repl
 
     class StoredNotifyJob < ActiveJob::Base
-      queue_as :repl
+      queue_as :repl_stored_notify
 
       def perform(attempt)
         StoredNotifier.new(attempt).notify

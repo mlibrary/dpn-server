@@ -7,7 +7,7 @@ module Client
   module Repl
 
     class FixityJob < ActiveJob::Base
-      queue_as :repl
+      queue_as :repl_fixity
 
       def perform(fixity_attempt)
         FixityGenerator.new(fixity_attempt).generate

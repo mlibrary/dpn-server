@@ -7,7 +7,7 @@ module Client
   module Repl
 
     class UnpackJob < ActiveJob::Base
-      queue_as :repl
+      queue_as :repl_unpack
 
       def perform(unpack_attempt)
         Unpacker.new(unpack_attempt).unpack

@@ -9,7 +9,7 @@ module Client
   module Repl
 
     class SchedulerJob < ActiveJob::Base
-      queue_as :repl
+      queue_as :repl_scheduler
 
       def perform(jobclass, filterclass, attempt_type)
         Scheduler.new(

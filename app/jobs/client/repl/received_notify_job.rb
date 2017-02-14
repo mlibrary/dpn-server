@@ -7,7 +7,7 @@ module Client
   module Repl
 
     class ReceivedNotifyJob < ActiveJob::Base
-      queue_as :repl
+      queue_as :repl_received_notify
 
       def perform(attempt)
         ReceivedNotifier.new(attempt).notify
