@@ -176,7 +176,7 @@ module ResqueInit
       description: "Schedule retrievals",
       every: ["1h", {first_in: "15m"} ],
       class: Client::Repl::SchedulerJob.to_s,
-      queue: "repl",
+      queue: "repl_scheduler",
       args: [
         Client::Repl::RetrievalJob.to_s,
         Client::Repl::RetrievalFilter.to_s,
@@ -188,7 +188,7 @@ module ResqueInit
       description: "Schedule unpacks",
       every: ["1h", {first_in: "15m"} ],
       class: Client::Repl::SchedulerJob.to_s,
-      queue: "repl",
+      queue: "repl_scheduler",
       args: [
         Client::Repl::UnpackJob.to_s,
         Client::Repl::UnpackFilter.to_s,
@@ -200,7 +200,7 @@ module ResqueInit
       description: "Schedule validation",
       every: ["1h", {first_in: "15m"} ],
       class: Client::Repl::SchedulerJob.to_s,
-      queue: "repl",
+      queue: "repl_scheduler",
       args: [
         Client::Repl::ValidateJob.to_s,
         Client::Repl::ValidateFilter.to_s,
@@ -212,7 +212,7 @@ module ResqueInit
       description: "Schedule fixity generation",
       every: ["1h", {first_in: "15m"} ],
       class: Client::Repl::SchedulerJob.to_s,
-      queue: "repl",
+      queue: "repl_scheduler",
       args: [
         Client::Repl::FixityJob.to_s,
         Client::Repl::FixityFilter.to_s,
@@ -224,7 +224,7 @@ module ResqueInit
       description: "Schedule notification of receipt",
       every: ["1h", {first_in: "15m"} ],
       class: Client::Repl::SchedulerJob.to_s,
-      queue: "repl",
+      queue: "repl_scheduler",
       args: [
         Client::Repl::ReceivedNotifyJob.to_s,
         Client::Repl::ReceivedNotifyFilter.to_s,
@@ -236,7 +236,7 @@ module ResqueInit
       description: "Schedule storing bags",
       every: ["1h", {first_in: "15m"} ],
       class: Client::Repl::SchedulerJob.to_s,
-      queue: "repl",
+      queue: "repl_scheduler",
       args: [
         Client::Repl::StoreJob.to_s,
         Client::Repl::StoreFilter.to_s,
@@ -248,7 +248,7 @@ module ResqueInit
       description: "Schedule notification of storage",
       every: ["1h", {first_in: "15m"} ],
       class: Client::Repl::SchedulerJob.to_s,
-      queue: "repl",
+      queue: "repl_scheduler",
       args: [
         Client::Repl::StoredNotifyJob.to_s,
         Client::Repl::StoredNotifyFilter.to_s,
