@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170131162720) do
+ActiveRecord::Schema.define(version: 20170215191441) do
 
   create_table "bags", force: :cascade do |t|
     t.string   "uuid"
@@ -164,22 +164,22 @@ ActiveRecord::Schema.define(version: 20170131162720) do
   add_index "replication_flows", ["replication_id"], name: "index_replication_flows_on_replication_id", unique: true
 
   create_table "replication_transfers", force: :cascade do |t|
-    t.integer  "bag_id",                                           null: false
-    t.integer  "from_node_id",                                     null: false
-    t.integer  "to_node_id",                                       null: false
-    t.integer  "protocol_id",                                      null: false
-    t.string   "link",                                             null: false
-    t.integer  "fixity_alg_id",                                    null: false
+    t.integer  "bag_id",                               null: false
+    t.integer  "from_node_id",                         null: false
+    t.integer  "to_node_id",                           null: false
+    t.integer  "protocol_id",                          null: false
+    t.string   "link",                                 null: false
+    t.integer  "fixity_alg_id",                        null: false
     t.text     "fixity_nonce"
     t.string   "fixity_value"
-    t.datetime "created_at",                                       null: false
-    t.datetime "updated_at",                                       null: false
-    t.string   "replication_id",                                   null: false
-    t.boolean  "store_requested",                  default: false, null: false
-    t.boolean  "stored",                           default: false, null: false
-    t.boolean  "cancelled",                        default: false, null: false
-    t.text     "cancel_reason"
-    t.string   "cancel_reason_detail", limit: 255
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+    t.string   "replication_id",                       null: false
+    t.boolean  "store_requested",      default: false, null: false
+    t.boolean  "stored",               default: false, null: false
+    t.boolean  "cancelled",            default: false, null: false
+    t.string   "cancel_reason"
+    t.text     "cancel_reason_detail"
   end
 
   add_index "replication_transfers", ["replication_id"], name: "index_replication_transfers_on_replication_id", unique: true
@@ -192,19 +192,19 @@ ActiveRecord::Schema.define(version: 20170131162720) do
   end
 
   create_table "restore_transfers", force: :cascade do |t|
-    t.integer  "bag_id",                                           null: false
-    t.integer  "from_node_id",                                     null: false
-    t.integer  "to_node_id",                                       null: false
-    t.integer  "protocol_id",                                      null: false
+    t.integer  "bag_id",                               null: false
+    t.integer  "from_node_id",                         null: false
+    t.integer  "to_node_id",                           null: false
+    t.integer  "protocol_id",                          null: false
     t.string   "link"
-    t.datetime "created_at",                                       null: false
-    t.datetime "updated_at",                                       null: false
-    t.string   "restore_id",                                       null: false
-    t.boolean  "accepted",                         default: false, null: false
-    t.boolean  "finished",                         default: false, null: false
-    t.boolean  "cancelled",                        default: false, null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+    t.string   "restore_id",                           null: false
+    t.boolean  "accepted",             default: false, null: false
+    t.boolean  "finished",             default: false, null: false
+    t.boolean  "cancelled",            default: false, null: false
     t.string   "cancel_reason"
-    t.string   "cancel_reason_detail", limit: 255
+    t.text     "cancel_reason_detail"
   end
 
   add_index "restore_transfers", ["restore_id"], name: "index_restore_transfers_on_restore_id", unique: true
