@@ -23,7 +23,7 @@ module Client
       RSYNC_OPTIONS = [
         "-a", "--partial", "-q", "-k", "--copy-unsafe-links",
         "--append-verify", "--checksum",
-        "-e" "ssh #{SSH_OPTIONS.join(" ")}"].join(" ")
+        "-e", "ssh #{SSH_OPTIONS.join(" ")}"].join(" ")
 
       Result = Struct.new(:success?, :error)
 
