@@ -161,6 +161,7 @@ GEM
     minitest (5.10.1)
     mono_logger (1.1.0)
     multi_json (1.10.1)
+    mysql2 (0.4.10)
     nokogiri (1.7.0.1)
       mini_portile2 (~> 2.1.0)
     okcomputer (1.11.1)
@@ -175,6 +176,7 @@ GEM
     pry-doc (0.9.0)
       pry (~> 0.9)
       yard (~> 0.8)
+    puma (3.11.0)
     rack (1.6.5)
     rack-protection (1.5.3)
       rack
@@ -334,9 +336,11 @@ DEPENDENCIES
   kaminari
   lograge
   logstash-event
+  mysql2
   okcomputer
   pry
   pry-doc
+  puma
   rails (~> 4.2)
   resque (~> 1.26.0)
   resque-pool (~> 0.6.0)

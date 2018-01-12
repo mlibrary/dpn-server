@@ -40,10 +40,8 @@
 .DS_Store
 
 # Configuration files
-Gemfile.local
 config/impersonate.yml.local
 config/resque-pool.yml
-config/secrets.yml
 config/environments/impersonate*.rb
 
 # Ignore capistrano
