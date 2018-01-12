@@ -12,7 +12,7 @@ default: &default
   port: 3306
 
 production:
-  url: <%= AppSettings.db %>
+  url: <%= AppSettings.db.url %>
 
 development:
   <<: *default
