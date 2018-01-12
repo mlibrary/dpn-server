@@ -11,6 +11,9 @@ default: &default
   reconnect: true
   port: 3306
 
+production:
+  url: <%= AppSettings.db %>
+
 development:
   <<: *default
   database: db/development.sqlite3

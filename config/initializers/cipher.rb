@@ -4,5 +4,7 @@
 # See LICENSE.md for details.
 
 
-Rails.configuration.cipher = EasyCipher::Cipher.new(Rails.configuration.cipher_key,
-                                                    Rails.configuration.cipher_iv)
+Rails.configuration.cipher = EasyCipher::Cipher.new(
+  AppSettings.secrets.cipher_key,
+  AppSettings.secrets.cipher_iv
+)
