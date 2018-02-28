@@ -14,19 +14,19 @@ class Bag < ActiveRecord::Base
   def to_param
     uuid
   end
-  
+
   def update_with_associations(new_attributes)
     return set_attributes_with_associations(new_attributes) do |bag|
       bag.save
     end
   end
-  
+
   def update_with_associations!(new_attributes)
     set_attributes_with_associations(new_attributes) do |bag|
       bag.save!
     end
   end
-  
+
   def self.find_fields
     Set.new [:uuid]
   end
@@ -54,7 +54,7 @@ class Bag < ActiveRecord::Base
   has_many :restore_transfers, autosave: true, inverse_of: :bag
   has_many :bag_nodes, inverse_of: :bag
   has_many :replicating_nodes, through: :bag_nodes, source: :node
-  
+
   ### ActiveModel::Dirty Validations
   validates :uuid, read_only: true, on: :update
   validates :ingest_node_id, read_only: true, on: :update
@@ -71,7 +71,7 @@ class Bag < ActiveRecord::Base
   validates :admin_node, presence: true
   validates :member, presence: true
   validates :local_id, presence: true, uniqueness: true
-  validates :size, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
+  validates :size, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :version_family, presence: true
   validates :version, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
   validates_uniqueness_of :version, :scope => :version_family
@@ -107,8 +107,8 @@ class Bag < ActiveRecord::Base
         "\tgot version=#{version}, uuid=#{uuid}, version_family.uuid=#{version_family.uuid}")
     end
   end
-  
-  
+
+
   def set_attributes_with_associations(new_attributes, &block)
     new_attributes = new_attributes.with_indifferent_access
     self.uuid           = new_attributes[:uuid]
@@ -129,8 +129,8 @@ class Bag < ActiveRecord::Base
     end
     yield self
   end
-  
- 
-  
+
+
+
 
 end
