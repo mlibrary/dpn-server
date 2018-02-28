@@ -10,13 +10,13 @@ describe Bag do
   it "has a valid factory" do
     expect(Fabricate.build(:bag)).to be_valid
   end
-  
+
   it "has a factory that honors updated_at" do
     time = 1.year.ago
     bag = Fabricate(:bag, updated_at: 1.year.ago)
     expect(bag.updated_at.change(usec: 0)).to eql time.change(usec: 0)
   end
-  
+
   describe "::find_fields" do
     it "returns its find fields" do
       expect(Bag.find_fields).to eql(Set.new([:uuid]))
@@ -59,7 +59,7 @@ describe Bag do
     end
   end
 
-  describe "member" do 
+  describe "member" do
     it "is required" do
       expect(Fabricate.build(:bag, member: nil)).to_not be_valid
     end
@@ -85,8 +85,8 @@ describe Bag do
     it "is required" do
       expect(Fabricate.build(:bag, size: nil)).to_not be_valid
     end
-    it "must be >= 1" do
-      expect(Fabricate.build(:bag, size: 0)).to_not be_valid
+    it "must be >= 0" do
+      expect(Fabricate.build(:bag, size: 0)).to be_valid
       expect(Fabricate.build(:bag, size: -1)).to_not be_valid
     end
     it "disallows changing" do
@@ -227,5 +227,5 @@ describe Bag do
 
 
 
-  
+
 end
