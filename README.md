@@ -20,6 +20,7 @@ git clone git@github.com:dpn-admin/dpn-server.git
 cd dpn-server
 git submodule update --init --recursive
 bundle install --path .bundle
+bundle exec rake config
 bundle exec rake db:setup
 bundle exec rspec
 ```
@@ -74,11 +75,11 @@ same (before encryption).
 
 The easiest way to get the data required to run your installation is to grab the
 production seed files from [the private repo](https://github.com/dpn-admin/private)
-and unpack them into `db/seeds/production-seeds.d`.  You will need to modify the
+and unpack them into `db/seeds/production-seeds.d`.  You will need to modify the 
 nodes seed to use the credentials specific to your node.
 
-From there, you can simply run `bundle exec rake db:seed`.  Note that the
-installation steps, above, should already be complete.  This operation is
+From there, you can simply run `bundle exec rake db:seed`.  Note that the 
+installation steps, above, should already be complete.  This operation is 
 idempotent.
 
 ## Replication and Synchronization

@@ -8,14 +8,24 @@
 module ResqueInit
   class << self
     def init!
-      init_resque
+      if resque_enabled?
+        init_resque
+      end
+    end
+
+    def resque_enabled?
+      dpn_config_file = File.join Rails.root, "config", "dpn.yml"
+      dpn_config = YAML.load(ERB.new(IO.read(dpn_config_file)).result)[Rails.env]
+      dpn_config["queue_adapter"] == :resque
     end
 
     def init_resque
       require 'resque'
+      rails_root = ENV['RAILS_ROOT'] || File.dirname(__FILE__) + '/../..'
       rails_env = ENV['RAILS_ENV'] || 'development'
 
-      Resque.redis = AppSettings.resque
+      resque_config = YAML.load_file(File.join rails_root, '/config/resque.yml')
+      Resque.redis = resque_config[rails_env]
       Resque.after_fork = Proc.new { ActiveRecord::Base.establish_connection }
       Resque.inline = Rails.env.test?
       Resque.redis.namespace = "dpn-server:#{Rails.env}"
