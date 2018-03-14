@@ -12,6 +12,8 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+Settings = Ettin.for(Ettin.settings_files('config', Rails.env))
+
 module DPN
   module Server
     class Application < Rails::Application

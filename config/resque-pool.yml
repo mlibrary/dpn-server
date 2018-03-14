@@ -1,0 +1,9 @@
+development: &development
+  sync: 1
+  "repl_scheduler, repl_fixity, repl_validate, repl_received_notify,repl_stored_notify,repl_retrieval,repl_unpack,repl_store": 1
+
+test:
+  <<: *development
+
+production: <%= Settings.resque_pool %>
+

@@ -23,12 +23,4 @@ test:
   database: db/test.sqlite3
 
 production:
-  <<: *default
-  adapter: mysql2
-  database: dpn
-  username: dpnuser
-  host: dpndb
-  password: somepassword
-  port: 3306
-  timeout: 2000
-  reconnect: true
+  url: <%= Settings.db.url %>
