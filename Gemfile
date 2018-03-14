@@ -7,15 +7,6 @@ source 'https://rubygems.org'
 
 ruby '~> 2.3.0'
 
-# ----------------------------------------------
-# Include gems for your local environment here.
-# e.g. gem "mysql2", group: :production
-# ----------------------------------------------
-
-if File.exist? 'Gemfile.local'
-  eval_gemfile 'Gemfile.local'
-end
-
 gem 'rails', '~> 4.2'
 
 gem 'active_scheduler', '~>0.3.0'
@@ -75,3 +66,10 @@ gem 'uglifier', group: [:assets]
 gem 'coffee-rails', group: [:assets]
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: :ruby, group: [:assets]
+
+group :production do
+  gem 'mysql2'
+  gem 'puma'
+end
+
+
