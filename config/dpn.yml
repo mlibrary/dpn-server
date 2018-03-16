@@ -37,5 +37,12 @@ test:
   repo_dir: <%= File.join "/tmp", "dpnrepo", "preservation" %>
   queue_adapter: :test
 
-production: <%= DPN.config.dpn %>
+# We call to_h here for now because YAML converts Ettin::Options
+# objects straight to nil, silently.
+production:
+  local_namespace: <%= DPN.config.dpn&.local_namespace %>
+  local_api_root: <%= DPN.config.dpn&.local_api_root %>
+  staging_dir: <%= DPN.config.dpn&.staging_dir %>
+  repo_dir: <%= DPN.config.dpn&.repo_dir %>
+  queue_adapter: <%= DPN.config.dpn&.queue_adapter %>
 

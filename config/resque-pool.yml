@@ -5,5 +5,5 @@ development: &development
 test:
   <<: *development
 
-production: <%= DPN.config.resque_pool %>
+production: <%= DPN.config.resque_pool.to_h %>
 
