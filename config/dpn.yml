@@ -37,5 +37,5 @@ test:
   repo_dir: <%= File.join "/tmp", "dpnrepo", "preservation" %>
   queue_adapter: :test
 
-production: <%= Settings.dpn %>
+production: <%= DPN.config.dpn %>
 

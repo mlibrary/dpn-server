@@ -12,9 +12,16 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-Settings = Ettin.for(Ettin.settings_files('config', Rails.env))
-
 module DPN
+  class << self
+    def config
+      @config ||= Ettin.for(Ettin.settings_files('config', Rails.env))
+    end
+  end
+
+  # eager load
+  self.config
+
   module Server
     class Application < Rails::Application
       # Provide DPN::Server::Application::VERSION

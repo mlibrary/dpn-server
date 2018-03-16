@@ -22,5 +22,7 @@ test:
   <<: *default
   database: db/test.sqlite3
 
+# Rails is insane, and still tries to resolve these values.
+# We fix this by using the lonely operator.
 production:
-  url: <%= Settings.db.url %>
+  url: <%= DPN.config.db&.url %>
