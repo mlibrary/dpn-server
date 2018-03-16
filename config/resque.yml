@@ -3,4 +3,4 @@ test: "localhost:6379"
 
 # This is only required if you wish to use the replication
 # and synchronization features of dpn-server.
-production: <%= DPN.config.redis.1 %>
+production: <%= DPN.config.resque.redis %>
