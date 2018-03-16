@@ -25,4 +25,4 @@ test:
 # Rails is insane, and still tries to resolve these values.
 # We fix this by using the lonely operator.
 production:
-  url: <%= DPN.config.db&.url %>
+  url: <%= Rails.env.production? ? DPN.config.db&.url : "" %>
