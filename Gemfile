@@ -30,7 +30,7 @@ gem 'ettin'
 
 group :production do
   gem 'mysql2'
-  gem 'puma'
+  gem 'puma', '~>3.10.0'
 end
 
 group :development, :test do
