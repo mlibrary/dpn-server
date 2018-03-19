@@ -9,5 +9,5 @@ Rails.application.configure do
   config.local_api_root   = cfg["local_api_root"]
   config.staging_dir      = cfg["staging_dir"]
   config.repo_dir         = cfg["repo_dir"]
-  config.active_job.queue_adapter = cfg["queue_adapter"]
+  config.active_job.queue_adapter = cfg["queue_adapter"].to_sym
 end
