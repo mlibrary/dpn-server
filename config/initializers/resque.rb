@@ -16,7 +16,7 @@ module ResqueInit
     def resque_enabled?
       dpn_config_file = File.join Rails.root, "config", "dpn.yml"
       dpn_config = YAML.load(ERB.new(IO.read(dpn_config_file)).result)[Rails.env]
-      dpn_config["queue_adapter"] == :resque
+      dpn_config["queue_adapter"].to_sym == :resque
     end
 
     def init_resque
