@@ -1,1 +1,1 @@
-resque-pool --daemon -p log/resque-pool.pid --environment $RAILS_ENV
+resque-pool -p log/resque-pool.pid --environment $RAILS_ENV
