@@ -44,6 +44,8 @@ module DPN
       # Do not swallow errors in after_commit/after_rollback callbacks.
       config.active_record.raise_in_transactional_callbacks = true
 
+      # Don't initialize the application and acces the database for absolutely no reason
+      config.assets.initialize_on_precompile = false
 
       config.generators do |g|
         g.test_framework :rspec,
